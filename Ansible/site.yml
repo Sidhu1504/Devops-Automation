@@ -1,0 +1,33 @@
+- name: Install Apache and Deploy Website
+  hosts: webserver
+  become: yes
+
+  tasks:
+    - name: Install Apache2
+      ansible.builtin.apt:
+        name: apache2
+        state: present
+        update_cache: yes
+
+    - name: Install Git
+      ansible.builtin.apt:
+        name: git
+        state: present
+
+    - name: Start and enable Apache2 service
+      ansible.builtin.service:
+        name: apache2
+        state: started
+        enabled: yes
+    
+    - name: Remove existing /var/www/html directory
+      ansible.builtin.file:
+        path: /var/www/html
+        state: absent
+    
+    - name: Clone Website Repository
+      ansible.builtin.git:
+        repo: "https://github.com/Sidhu1504/my_app.git"
+        dest: /var/www/html
+        force: yes
+
